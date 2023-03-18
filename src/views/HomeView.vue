@@ -14,7 +14,8 @@ export default {
         fetch(`http://www.omdbapi.com/?apikey=${env.apikey}&s=${search.value}`)
         .then(response => response.json())
         .then(data =>{
-          console.log(data);
+          movies.value = data.Search;
+          search.value = '';
         });// To call searches from the omdb api
       }
     }
@@ -53,7 +54,21 @@ export default {
       <input type="submit" value="Search" />
     </form>
 
-    <div class="movie-lidt">MOVIES</div>
+    <div class="movie-list">
+      <div class="movie-screen" v-for="movie in movies" :key="movie.imdbID">
+        <router-link v-bind:to="'/movie/' + movie.imdbID" class="movie-link">
+          <div class="movie-product-image">
+            <img :src="movie.Poster" alt="Movie Poster" />
+            <div class="type">{{ movie.Type }}</div>
+          </div>
+
+          <div class="detail">
+            <p class="year">{{ movie.Year }}</p>
+            <h3>{{ movie.Title }}</h3>
+          </div>
+        </router-link>
+      </div>
+    </div> <!--To display the movies called out -->
   </div>
 </template>
 
@@ -137,6 +152,46 @@ export default {
 
         &:active {
           background-color: rgb(77, 6, 6);
+        }
+      }
+    }
+  }
+
+  .movie-list{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px 8px;
+  }
+
+  .movie-screen{
+    max-width: 50%;
+    flex: 1 1 50%;
+    padding: 16px 8px;
+
+    .movie-link{
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+
+      .movie-product-image{
+        position: relative;
+        display: block;
+
+        img{
+          display: block;
+          width: 100%;
+          height: 275px;
+          object-fit: cover;
+        }
+
+        .type{
+          position: absolute;
+          padding: 8px 16px;
+          background-color: #8b0a0a;
+          color: #fff;
+          bottom: 16px;
+          left: 0px;
+          text-transform: capitalize;
         }
       }
     }
